@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useReducer, Dispatch } from "react"
+import React, { createContext, useContext, useReducer, useEffect, Dispatch } from "react"
 import { v4 as uuid } from "uuid"
 import {findItemIndexById} from "./utills/findItemIndexById"
 import { moveItem } from "./moveItem"
 import { DragItem } from "./DragItem";
+import {save} from "./api"
 
 interface Task {
     id: string
@@ -133,6 +134,10 @@ const AppStateContext = createContext<AppStateContextProps>({} as AppStateContex
 
 export const AppStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
     const [state, dispatch] = useReducer(appStateReducer, appData)
+
+    useEffect(() => {
+        save(state).then(r => console.log(r) )
+    }, [state])
 
     return (
         <AppStateContext.Provider value={{ state, dispatch }}>
